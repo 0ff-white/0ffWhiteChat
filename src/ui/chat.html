@@ -1,0 +1,68 @@
+<style>
+body {
+  color: #fff;
+}
+</style>
+
+<table>
+  <tbody data-bind="foreach: messages">
+    <tr>
+      <td class="username" data-bind="text: username"></td>
+      <td class="message"  data-bind="text: message"></td>
+    </tr>
+  </tbody>
+</table>
+<input type="text" data-bind="value: inputMessage, event: { keyup: checkForSubmit }">
+
+<script>
+  // Missing from this scope
+  // include('src/libraries/spice');
+  function SpiceLog(message) {
+    if (typeof log === 'function') {
+      log(message);
+    } else {
+      throw "Spice.Log\n" + message;
+    }
+  }
+
+  function SpiceInspect(inspecting) {
+    var output = "\n";
+    if (inspecting instanceof Array) {
+      output += "Array of " + inspecting.length + "\n";
+      for (var i = 0; i < inspecting.length; i++)
+        output += "array[" + i + "] = " + inspecting[i].toString() + "\n";
+    } else if (typeof inspecting === 'object') {
+      for (var property in inspecting)
+        output += property + ": " + inspecting[property] + "\n";
+    } else {
+      output += inspecting.toString();
+    }
+    SpiceLog(output);
+  }
+
+  $(function() {
+      Topia.showWindow("Chat");
+      ko.applyBindings(Chat);
+
+      Topia.onData("Chat", function(message) {
+        Chat.messages.push(message.data);
+      });
+  });
+  
+  var ChatModel = function Chat() {
+    var self = this;
+    self.messages = ko.observableArray([]);
+    self.inputMessage = ko.observable('');
+    self.checkForSubmit = function (target, e) {
+      if (e.keyCode == 13) {
+        e.preventDefault();
+        Topia.action('Chat', { username: Me().name, message: self.inputMessage() });
+        self.inputMessage('');
+      }
+    }
+    var Me = Topia.me;
+  };
+
+  var Chat = new ChatModel(),
+      model = function() {}; // Since Josh auto-binds for us on model
+</script>
