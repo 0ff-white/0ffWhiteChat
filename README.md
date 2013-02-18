@@ -1,4 +1,4 @@
-0ffWhiteChat
+0ff-White Chat
 ============
 
 Chat Window for Topia Online
