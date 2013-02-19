@@ -1,18 +1,122 @@
 <style>
-body {
-  color: #fff;
+/* general */
+input, button {
+  margin: 5px;
+  padding: 1px 2px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(80,80,80);
+  border-radius: 4px;
+  background-color: rgb(53,52,47);
+  color: rgb(255,255,255);
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+/* Chat */
+#Off-White-Chat {
+  width: 350px;
+  font-family: Verdana, sans-serif;
+  font-size: 11px;
+  color: rgb(255,255,255);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(80,80,80);
+  border-radius: 8px;
+  background-color: rgb(53,52,47);
+  overflow: hidden;
+  box-shadow: -1px 1px 4px 0px rgb(0,0,0);
+}
+
+#textinput {
+  margin-top: 0px;
+  width: 275px;
+    box-shadow: inset 0px 0px 4px 0px rgb(0,0,0);
+}
+
+#textinput:focus {
+  border-color: rgba(255,165,0,0.6);
+  box-shadow: 0px 0px 0px 1px rgba(255,165,0,0.7);
+}
+
+#submit {
+  margin-top: 0px;
+  width: 45px;
+    box-shadow: -1px 1px 1px 0px rgb(0,0,0);
+    cursor: pointer;
+}
+
+#submit:active {
+  box-shadow: inset -1px 1px 2px 0px rgb(0,0,0);
+}
+
+#menu {
+
+}
+
+.log {
+  height: 160px;
+  width: 338px;
+  margin: 5px;
+  border-radius: 4px;
+  border-style: solid;
+  border-color: rgb(80,80,80);
+  border-width: 1px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  word-wrap: break-word;
+  box-shadow: inset 0px 0px 4px 0px rgb(0,0,0);
+}
+
+.message {
+  padding: 1px;
+}
+
+.settingsbutton {
+  box-shadow: -1px 1px 1px 0px rgb(0,0,0);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.settingsbutton:active {
+  box-shadow: inset -1px 1px 2px 0px rgb(0,0,0);
 }
 </style>
 
-<table>
-  <tbody data-bind="foreach: messages">
-    <tr>
-      <td class="username" data-bind="text: username"></td>
-      <td class="message"  data-bind="text: message"></td>
-    </tr>
-  </tbody>
-</table>
-<input type="text" data-bind="value: inputMessage, event: { keyup: checkForSubmit }">
+<div id="Off-white-Chat">
+  <div id="menu">
+    <button class="settingsbutton left">Settings</button>
+    <button class="settingsbutton right" data-bind="click: chatToggle">
+      <img src="/API/GetImage?name=images/0ff-white/chat/minus&world=MalevolentJalapeno&partition=development" alt="" data-bind="visible: chatShow">
+      <img src="/API/GetImage?name=images/0ff-white/chat/plus&world=MalevolentJalapeno&partition=development" alt="" data-bind="visible: chatHide" style="display: none;">
+    </button>
+    <button class="settingsbutton right">
+      <img src="/API/GetImage?name=images/0ff-white/chat/arrowdown&world=MalevolentJalapeno&partition=development" alt="">
+    </button>
+    <button class="settingsbutton right">
+      <img src="/API/GetImage?name=images/0ff-white/chat/arrowup&world=MalevolentJalapeno&partition=development" alt="">
+    </button>
+  </div>
+  <div id="chatLog1" class="log" data-bind="foreach: messages, visible: chatShow">
+    <div class="message">
+      <span data-bind="text: timestamp"></span>
+      <span data-bind="text: username" style="font-weight: bold;"></span>
+      <span data-bind="text: message"></span>
+    </div>
+  </div>
+  <div>
+    <form data-bind="submit: submit">
+      <input id="textinput" type="text" value="" data-bind="value: inputMessage">
+      <input id="submit" type="submit" value="Send">
+    </form>
+  </div>
+</div>
 
 <script>
   // Missing from this scope
@@ -41,26 +145,87 @@ body {
   }
 
   $(function() {
-      Topia.showWindow("Chat");
-      ko.applyBindings(Chat);
+    Topia.showWindow("Chat", true);
+    var $windowWrap = $('iframe[src*="name=chat&"]', parent.document).parent().parent();
+    $windowWrap.css({
+      'top': 'inherit',
+      'bottom': '-705px',
+      'width': '352px',
+      'height': '235px'
+    });
+    $('input[data-bind*="submitChat"]', parent.document).hide();
 
-      Topia.onData("Chat", function(message) {
-        Chat.messages.push(message.data);
-      });
+    ko.applyBindings(Chat);
+
+    Topia.onData("Chat", function(message) {
+      Chat.messages.push(new ChatMessageModel(message.data));
+      $('#chatLog1').scrollTop(999999);
+      /*if(Chat.messages().length > 10){
+        Chat.messages.shift();
+      }*/
+    });
   });
+
+  function getTime(){
+    var date = new Date();
+    var hours = date.getHours();
+    if(hours < 10){
+      hours = "0" + hours;
+    }
+    var minutes = date.getMinutes();
+    if(minutes < 10){
+      minutes = "0" + minutes;
+    }
+    var seconds = date.getSeconds();
+    if(seconds < 10){
+      seconds = "0" + seconds;
+    }
+    return (hours + ":" + minutes /*+ ":" + seconds*/);
+  }
+
+  var ChatMessageModel = function(data) {
+    this.username  = data.username;
+    this.message   = data.message;
+    this.timestamp = getTime();
+
+    self.important = ko.computed(function() {
+      return this.username === '0ff-white Chat';
+    });
+  }
   
   var ChatModel = function Chat() {
-    var self = this;
+    var self = this,
+        Me = Topia.me;
     self.messages = ko.observableArray([]);
     self.inputMessage = ko.observable('');
-    self.checkForSubmit = function (target, e) {
-      if (e.keyCode == 13) {
-        e.preventDefault();
-        Topia.action('Chat', { username: Me().name, message: self.inputMessage() });
-        self.inputMessage('');
+
+    self.submit = function () {
+      var message = self.inputMessage().trim();
+      if (message == '') {
+        // We should set the focus back to the game
+        return;
       }
-    }
-    var Me = Topia.me;
+
+      if (message[0] === '/') {
+        self.messages.push(new ChatMessageModel({
+          'username': '0ff-white Chat',
+          'message': 'Cannot handle commands yet'
+        }));
+      } else {
+        Topia.action('Chat', { username: Me().name, message: message });
+      }
+      self.inputMessage('');
+    };
+
+    self.chatShow = ko.observable(true);
+    
+    self.chatHide = ko.computed(function(){
+      return !self.chatShow();
+    }, self);
+
+    self.chatToggle = function() {
+      self.chatShow(!self.chatShow());
+    };
   };
 
   var Chat = new ChatModel(),
