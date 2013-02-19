@@ -110,10 +110,10 @@
 					<image src="images/0ff-white/chat/minus.png" alt="" data-bind="visible: chatShow">
 					<image src="images/0ff-white/chat/plus.png" alt="" data-bind="visible: chatHide">
 				</button>
-				<button class="settingsbutton right">
+				<button class="settingsbutton right" data-bind="click: chatScrollDown">
 					<image src="images/0ff-white/chat/arrowdown.png" alt="">
 				</button>
-				<button class="settingsbutton right">
+				<button class="settingsbutton right" data-bind="click: chatScrollUp">
 					<image src="images/0ff-white/chat/arrowup.png" alt="">
 				</button>
 			</div>
@@ -176,7 +176,7 @@
 				}
 				else {
 					this.chatLog.push(new ChatMsg("Testguy", msg));
-					if(this.chatLog().length > 10){
+					if(this.chatLog().length > 50){
 						this.chatLog.shift();
 					}
 				}
@@ -190,7 +190,15 @@
 			}, this);
 			this.chatToggle = function(){
 				this.chatShow(!this.chatShow());
-			}
+			};
+			this.chatScrollUp = function(){
+				var divChatlog = document.getElementById("chatLog1");
+				divChatlog.scrollTop = divChatlog.scrollTop - 75;
+			};
+			this.chatScrollDown = function(){
+				var divChatlog = document.getElementById("chatLog1");
+				divChatlog.scrollTop = divChatlog.scrollTop + 75;
+			};
 		}
 		ko.applyBindings(new model());
 	</script>
