@@ -10,7 +10,7 @@
 			background-color: rgb(22, 24, 28);
 		}
 		input, button{
-			margin: 5px;
+			margin: 0px 5px;
     		padding: 1px 2px;
 			border-width: 1px;
 			border-style: solid;
@@ -37,6 +37,10 @@
 		.right{
 			float: right;
 		}
+		.row{
+			width: 100%;
+			display: inline-block;
+		}
 		/* Chat */
 		#window{
 			width: 350px;
@@ -55,7 +59,6 @@
 	        box-shadow: -1px 1px 4px 0px rgb(0,0,0);
 		}
 		#textinput{
-			margin-top: 0px;
 			width: 275px;
     		box-shadow: inset 0px 0px 4px 0px rgb(0,0,0);
 		}
@@ -73,7 +76,10 @@
 			box-shadow: inset -1px 1px 2px 0px rgb(0,0,0);
 		}
 		#menu{
-
+			margin-top: 3px;
+		}
+		#inputRow{
+			margin-bottom: 3px;
 		}
 		.log{
 			height: 160px;
@@ -104,16 +110,16 @@
 <body>
 	<div class="topiagamewindow">
 		<div id="window">
-			<div id="menu">
-				<button class="settingsbutton left">Settings</button>
+			<div id="menu" class="row">
+				<button class="settingsbutton left" data-bind="visible: chatShow">Settings</button>
 				<button class="settingsbutton right" data-bind="click: chatToggle">
 					<image src="images/0ff-white/chat/minus.png" alt="" data-bind="visible: chatShow">
 					<image src="images/0ff-white/chat/plus.png" alt="" data-bind="visible: chatHide">
 				</button>
-				<button class="settingsbutton right" data-bind="click: chatScrollDown">
+				<button class="settingsbutton right" data-bind="click: chatScrollDown, visible: chatShow">
 					<image src="images/0ff-white/chat/arrowdown.png" alt="">
 				</button>
-				<button class="settingsbutton right" data-bind="click: chatScrollUp">
+				<button class="settingsbutton right" data-bind="click: chatScrollUp, visible: chatShow">
 					<image src="images/0ff-white/chat/arrowup.png" alt="">
 				</button>
 			</div>
@@ -124,7 +130,7 @@
 					<span data-bind="text: text"></span>
 				</div>
 			</div>
-			<div>
+			<div id="inputRow" class="row">
 				<form data-bind="submit: chatSubmit">
 					<input id="textinput" type="text" value="" data-bind="value: chatInput">
 					<input id="submit" type="submit" value="Send">
