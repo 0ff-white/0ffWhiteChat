@@ -36,7 +36,7 @@ input, button {
 
 #textinput {
   margin-top: 0px;
-  width: 275px;
+  width: 285px;
     box-shadow: inset 0px 0px 4px 0px rgb(0,0,0);
 }
 
@@ -63,7 +63,7 @@ input, button {
 .log {
   height: 160px;
   width: 338px;
-  margin: 5px;
+  margin: 5px 5px 0;
   border-radius: 4px;
   border-style: solid;
   border-color: rgb(80,80,80);
@@ -87,20 +87,30 @@ input, button {
 .settingsbutton:active {
   box-shadow: inset -1px 1px 2px 0px rgb(0,0,0);
 }
+
+#input_form {
+  clear: both;
+  padding: 5px 0;
+  margin: 0;
+}
+
+#input_form input {
+  margin-right: 0;
+}
 </style>
 
-<div id="Off-white-Chat">
+<div id="Off-white-Chat" data-bind="draggable: { iframeFix: true, opacity: 0.5, handle: '#menu', containment: 'document', stack: '.studioWindow' }">
   <div id="menu">
     <button class="settingsbutton left">Settings</button>
     <button class="settingsbutton right" data-bind="click: chatToggle">
-      <img src="/API/GetImage?name=images/0ff-white/chat/minus&world=MalevolentJalapeno&partition=development" alt="" data-bind="visible: chatShow">
-      <img src="/API/GetImage?name=images/0ff-white/chat/plus&world=MalevolentJalapeno&partition=development" alt="" data-bind="visible: chatHide" style="display: none;">
+      <img src="/API/GetImage?name=@MalevolentJalapeno/plugin_dev/0ff-white-chat/images/minus.png&world=MalevolentJalapeno&partition=development" alt="" data-bind="visible: chatShow">
+      <img src="/API/GetImage?name=@MalevolentJalapeno/plugin_dev/0ff-white-chat/images/plus.png&world=MalevolentJalapeno&partition=development" alt="" data-bind="visible: chatHide" style="display: none;">
     </button>
     <button class="settingsbutton right">
-      <img src="/API/GetImage?name=images/0ff-white/chat/arrowdown&world=MalevolentJalapeno&partition=development" alt="">
+      <img src="/API/GetImage?name=@MalevolentJalapeno/plugin_dev/0ff-white-chat/images/arrowdown.png&world=MalevolentJalapeno&partition=development" alt="">
     </button>
     <button class="settingsbutton right">
-      <img src="/API/GetImage?name=images/0ff-white/chat/arrowup&world=MalevolentJalapeno&partition=development" alt="">
+      <img src="/API/GetImage?name=@MalevolentJalapeno/plugin_dev/0ff-white-chat/images/arrowup.png&world=MalevolentJalapeno&partition=development" alt="">
     </button>
   </div>
   <div id="chatLog1" class="log" data-bind="foreach: messages, visible: chatShow">
@@ -110,59 +120,30 @@ input, button {
       <span data-bind="text: message"></span>
     </div>
   </div>
-  <div>
-    <form data-bind="submit: submit">
-      <input id="textinput" type="text" value="" data-bind="value: inputMessage">
-      <input id="submit" type="submit" value="Send">
-    </form>
-  </div>
+  <form id="input_form" data-bind="submit: submit">
+    <input id="textinput" type="text" value="" data-bind="value: inputMessage">
+    <input id="submit" type="submit" value="Send">
+  </form>
 </div>
 
 <script>
-  // Missing from this scope
-  // include('src/libraries/spice');
-  function SpiceLog(message) {
-    if (typeof log === 'function') {
-      log(message);
-    } else {
-      throw "Spice.Log\n" + message;
-    }
-  }
-
-  function SpiceInspect(inspecting) {
-    var output = "\n";
-    if (inspecting instanceof Array) {
-      output += "Array of " + inspecting.length + "\n";
-      for (var i = 0; i < inspecting.length; i++)
-        output += "array[" + i + "] = " + inspecting[i].toString() + "\n";
-    } else if (typeof inspecting === 'object') {
-      for (var property in inspecting)
-        output += property + ": " + inspecting[property] + "\n";
-    } else {
-      output += inspecting.toString();
-    }
-    SpiceLog(output);
-  }
-
   $(function() {
-    Topia.showWindow("Chat", true);
-    var $windowWrap = $('iframe[src*="name=chat&"]', parent.document).parent().parent();
-    $windowWrap.css({
-      'top': 'inherit',
-      'bottom': '-705px',
-      'width': '352px',
-      'height': '235px'
+    Topia.showWindow("Chat", {
+      hideFrame: true,
+      position: {
+        offset: "10 -245",
+        my: "left bottom",
+        at: "left bottom",
+        of: "#Game",
+        collision: "fit"
+      }
     });
-    $('input[data-bind*="submitChat"]', parent.document).hide();
 
     ko.applyBindings(Chat);
 
     Topia.onData("Chat", function(message) {
       Chat.messages.push(new ChatMessageModel(message.data));
       $('#chatLog1').scrollTop(999999);
-      /*if(Chat.messages().length > 10){
-        Chat.messages.shift();
-      }*/
     });
   });
 
@@ -212,7 +193,8 @@ input, button {
           'message': 'Cannot handle commands yet'
         }));
       } else {
-        Topia.action('Chat', { username: Me().name, message: message });
+        //Topia.event({ speech: true, message: message, actorid: Topia.me().id });
+        Topia.action("Chat", { message: message });
       }
       self.inputMessage('');
     };

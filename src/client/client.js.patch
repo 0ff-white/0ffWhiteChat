@@ -1,0 +1,11 @@
+--- old.js	2013-02-20 01:22:04.000000000 -0700
++++ new.js	2013-02-20 01:22:17.000000000 -0700
+@@ -70,7 +70,7 @@
+ 
+ function onLogin(args) {
+     api.ui("src/ui/menu", true, { hideFrame: true });
+-    api.ui("src/ui/chat", true, { hideFrame: true });
++    api.ui("@MalevolentJalapeno/plugin_dev/0ff-white-Chat/src/ui/chat", true, { hideFrame: true });
+ }
+ 
+ 
