@@ -80,22 +80,45 @@
 		#inputRow{
 			margin-bottom: 3px;
 		}
+		
 		.menu{
 			margin-top: 3px;
 		}
-		.log{
+		.logWrapper{
 			height: 160px;
 			width: 338px;
-			margin: 5px;
+			margin: 3px 5px;
 			border-radius: 4px;
 			border-style: solid;
 			border-color: rgb(80,80,80);
 			border-width: 1px;
+			box-shadow: inset 0px 0px 4px 0px rgb(0,0,0);
+		}
+		.log{
+			width: 316px;
+			height: 100%;
+			position: relative;
 			font-size: 11px;
 			overflow-x: hidden;
 			overflow-y: hidden;
 			word-wrap: break-word;
-			box-shadow: inset 0px 0px 4px 0px rgb(0,0,0);
+			float: left;
+		}
+		.scrollWrapper{
+			width: 22px;
+			position: relative;
+			height: 100%;
+			float: right;
+		}
+		.scrollUp{
+			position: absolute;
+			top: 2px;
+			right: 2px;
+		}
+		.scrollDown{
+			position: absolute;
+			bottom: 2px;
+			right: 2px;
 		}
 		.message{
 			padding: 1px;
@@ -118,24 +141,28 @@
 				<button class="settingsbutton iconbutton right" data-bind="click: chatToggle">
 					<img class="icon" src="images/0ff-white/chat/minus.svg">
 				</button>
-				<button class="settingsbutton iconbutton right" data-bind="click: chatScrollDown">
-					<img class="icon" src="images/0ff-white/chat/arrowdown.svg">
-				</button>
-				<button class="settingsbutton iconbutton right" data-bind="click: chatScrollUp">
-				    <img class="icon" src="images/0ff-white/chat/arrowup.svg">
-				</button>
 			</div>
-			<div class="menu row hidden" style="display: none" data-bind="visible: chatHide">
+			<div class="menu row" style="display: none" data-bind="visible: chatHide">
 				<span class="left" style="font-weight: bold;">0ff-White Chat</span>
 				<button class="settingsbutton iconbutton right" data-bind="click: chatToggle">
 					<img class="icon" src="images/0ff-white/chat/plus.svg">
 				</button>
 			</div>
-			<div id="chatLog1" class="log" data-bind="foreach: chatLog, visible: chatShow">
-				<div class="message">
-					<span data-bind="text: timestamp"></span>
-					<span data-bind="text: name" style="font-weight: bold;"></span>
-					<span data-bind="text: text"></span>
+			<div class="logWrapper row" data-bind="visible: chatShow">
+				<div id="chatLog1" class="log" data-bind="foreach: chatLog">
+					<div class="message">
+						<span data-bind="text: timestamp"></span>
+						<span data-bind="text: name" style="font-weight: bold;"></span>
+						<span data-bind="text: text"></span>
+					</div>
+				</div>
+				<div class="scrollWrapper">
+					<button class="settingsbutton iconbutton scrollUp" data-bind="click: chatScrollUp">
+				    	<img class="icon" src="images/0ff-white/chat/arrowup.svg">
+					</button>
+					<button class="settingsbutton iconbutton scrollDown" data-bind="click: chatScrollDown">
+						<img class="icon" src="images/0ff-white/chat/arrowdown.svg">
+					</button>
 				</div>
 			</div>
 			<div id="inputRow" class="row">
@@ -194,6 +221,26 @@
 			return (hours + ":" + minutes /*+ ":" + seconds*/);
 		}
 
+		function scrollUp(id, value){
+			var divChatlog = document.getElementById(id);
+			divChatlog.scrollTop = divChatlog.scrollTop - value;
+		}
+
+		function scrollDown(id, value){
+			var divChatlog = document.getElementById(id);
+			divChatlog.scrollTop = divChatlog.scrollTop + value;
+		}
+
+		function scrollTop(id){
+			var divChatlog = document.getElementById(id);
+			divChatlog.scrollTop = 0;
+		}
+
+		function scrollBottom(id){
+			var divChatlog = document.getElementById(id);
+			divChatlog.scrollTop = divChatlog.scrollHeight;
+		}
+
 		/* 
 			==== Contructors ==== 
 			- Message: "13:37 <b>MrAwesome</b> Hi guys"
@@ -241,7 +288,7 @@
 					this.chatLog.shift();
 				}
 
-				this.chatScrollBot();
+				this.chatScrollBottom();
 				this.chatInput("");
 			};
 
@@ -260,24 +307,58 @@
 			*/
 
 			this.chatScrollUp = function(){
-				var divChatlog = document.getElementById("chatLog1");
-				divChatlog.scrollTop = divChatlog.scrollTop - 75;
+				scrollUp("chatLog1", 75);
 			};
 
 			this.chatScrollDown = function(){
-				var divChatlog = document.getElementById("chatLog1");
-				divChatlog.scrollTop = divChatlog.scrollTop + 75;
+				scrollDown("chatLog1", 75);
 			};
 
 			this.chatScrollTop = function(){
-				var divChatlog = document.getElementById("chatLog1");
-				divChatlog.scrollTop = 0;
+				scrollTop("chatLog1");
 			};
 
-			this.chatScrollBot = function(){
-				var divChatlog = document.getElementById("chatLog1");
-				divChatlog.scrollTop = divChatlog.scrollHeight;
+			this.chatScrollBottom = function(){
+				scrollBottom("chatLog1");
 			};
+
+			/* 
+			==== Commands ==== 
+			*/
+
+			this.Command = {};
+			this.Command.execute = function(text){
+				var args = [];
+				var result = {};
+				args = text.split(" ");
+			};
+			this.Command.set = function(){
+
+			};
+			this.Command.help = function(){
+
+			};
+
+			/* 
+			==== Settings ==== 
+			*/
+
+			this.Settings = {};
+
+			this.Settings.Font = {};
+			this.Settings.Font.Color = ko.observable();
+			this.Settings.Font.Size = ko.observable();
+			this.Settings.Font.Family = ko.observable();
+
+			this.Settings.Background = {};
+			this.Settings.Background.Color = ko.observable();
+
+			this.Settings.ShowEmoteIcons = ko.observable();
+
+			this.Settings.Log = {};
+			this.Settings.Log.Height = ko.observable();
+			this.Settings.Log.HistoryLength = ko.observable();
+			this.Settings.Log.ScrollValue = ko.observable();
 		}
 		ko.applyBindings(new model());
 	</script>
