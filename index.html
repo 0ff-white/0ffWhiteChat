@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Topia Interface Test</title>
+	<title>0ff-white Chat</title>
 	<meta charset="utf-8">
-	<link href="normalize.css" rel="stylesheet" media="screen">
+	<link href="css/normalize.css" rel="stylesheet" media="screen">
+	<link href="css/0ff.css" rel="stylesheet" media="screen">
 	<style>
-		/* general */
+		/* ONLY FOR THE STANDALONE VERSION */
 		body{
 			background-color: rgb(22, 24, 28);
 		}
@@ -29,78 +30,27 @@
 			border-color: rgb(90,90,90);
 			border-radius: 15px;
 			background-color: rgb(0,0,0);
-			background-image: url("images/0ff-white/chat/grass.png");
+			background-image: url("images/0ff-white/grass.png");
 		}
-		.left{
-			float: left;
-			margin-left: 5px;
+		/* === Chat === */
+		#textinput{
+			width: 275px;
 		}
-		.right{
-			float: right;
-			margin-right: 5px;
-		}
-		.row{
-			width: 100%;
-			display: inline-block;
-		}
-		.icon{
-			height: 16px;
-			width: 16px;
-			padding: 0px;
-			margin: 0px;
-		}
-		.iconbutton{
-			padding: 0px;
-		}
-		/* Chat */
-		#window{
+		.window{
 			width: 350px;
 			bottom: 5px;
 			left: 5px;
-			position: absolute;
-			font-family: Verdana, sans-serif;
-			font-size: 12px;
-			color: rgb(255,255,255);
-			border-width: 1px;
-			border-style: solid;
-			border-color: rgb(80,80,80);
-			border-radius: 8px;
-			background-color: rgb(53,52,47);
-			overflow: hidden;
-	        box-shadow: -1px 1px 4px 0px rgb(0,0,0);
-		}
-		#textinput{
-			width: 275px;
-    		box-shadow: inset 0px 0px 4px 0px rgb(0,0,0);
-		}
-		#textinput:focus{
-			border-color: rgba(255,165,0,0.6);
-			box-shadow: 0px 0px 0px 1px rgba(255,165,0,0.7);
-		}
-		#inputRow{
-			margin-bottom: 3px;
-		}
-		
-		.menu{
-			margin-top: 3px;
 		}
 		.logWrapper{
 			height: 160px;
 			width: 338px;
-			margin: 3px 5px;
-			border-radius: 4px;
-			border-style: solid;
-			border-color: rgb(80,80,80);
-			border-width: 1px;
-			box-shadow: inset 0px 0px 4px 0px rgb(0,0,0);
 		}
 		.log{
 			width: 316px;
 			height: 100%;
 			position: relative;
 			font-size: 11px;
-			overflow-x: hidden;
-			overflow-y: hidden;
+			overflow: hidden;
 			word-wrap: break-word;
 			float: left;
 		}
@@ -109,6 +59,7 @@
 			position: relative;
 			height: 100%;
 			float: right;
+			background-color: rgba(0,0,0,0.08)
 		}
 		.scrollUp{
 			position: absolute;
@@ -121,54 +72,41 @@
 			right: 2px;
 		}
 		.message{
-			padding: 1px;
-		}
-		.settingsbutton{
-    		box-shadow: -1px 1px 1px 0px rgb(0,0,0);
-    		cursor: pointer;
-    		overflow: hidden;
-		}
-		.settingsbutton:active{
-			box-shadow: inset -1px 1px 2px 0px rgb(0,0,0);
+			padding: 1px 1px 1px 2px;
 		}
 	</style>
 </head>
 <body>
 	<div class="topiagamewindow">
-		<div id="window">
-			<div class="menu row" data-bind="visible: chatShow">
+		<div class="window">
+			<div class="row top" data-bind="visible: show">
 				<button class="settingsbutton left">Settings</button>
-				<button class="settingsbutton iconbutton right" data-bind="click: chatToggle">
-					<img class="icon" src="images/0ff-white/chat/minus.svg">
+				<button class="settingsbutton iconbutton right" data-bind="click: toggle">
+					<img class="icon" src="images/0ff-white/icons/minus.svg">
 				</button>
 			</div>
-			<div class="menu row" style="display: none" data-bind="visible: chatHide">
+			<div class="row top" style="display: none" data-bind="visible: hide">
 				<span class="left" style="font-weight: bold;">0ff-White Chat</span>
-				<button class="settingsbutton iconbutton right" data-bind="click: chatToggle">
-					<img class="icon" src="images/0ff-white/chat/plus.svg">
+				<button class="settingsbutton iconbutton right" data-bind="click: toggle">
+					<img class="icon" src="images/0ff-white/icons/plus.svg">
 				</button>
 			</div>
-			<div class="logWrapper row" data-bind="visible: chatShow">
-				<div id="chatLog1" class="log" data-bind="foreach: chatLog">
-					<div class="message">
-						<span data-bind="text: timestamp"></span>
-						<span data-bind="text: name" style="font-weight: bold;"></span>
-						<span data-bind="text: text"></span>
-					</div>
+			<div class="logWrapper row top left inset" data-bind="visible: show">
+				<div id="chatLog1" class="log" data-bind="template: { name: logTemplate, foreach: chatlog }">
 				</div>
 				<div class="scrollWrapper">
-					<button class="settingsbutton iconbutton scrollUp" data-bind="click: chatScrollUp">
-				    	<img class="icon" src="images/0ff-white/chat/arrowup.svg">
+					<button class="iconbutton scrollUp" data-bind="click: scrollUp">
+				    	<img class="icon" src="images/0ff-white/icons/direction_up.svg">
 					</button>
-					<button class="settingsbutton iconbutton scrollDown" data-bind="click: chatScrollDown">
-						<img class="icon" src="images/0ff-white/chat/arrowdown.svg">
+					<button class="iconbutton scrollDown" data-bind="click: scrollDown">
+						<img class="icon" src="images/0ff-white/icons/direction_down.svg">
 					</button>
 				</div>
 			</div>
-			<div id="inputRow" class="row">
-				<form data-bind="submit: chatSubmit">
-					<input id="textinput" class="left" type="text" value="" data-bind="value: chatInput">
-					<input id="submit" class="settingsbutton right" type="submit" value="Send">
+			<div id="inputRow" class="row top bot">
+				<form data-bind="submit: submit">
+					<input id="textinput" class="left" type="text" value="" data-bind="value: textinput">
+					<input id="submit" class="btn right" type="submit" value="Send">
 				</form>
 			</div>
 		</div>
@@ -177,7 +115,7 @@
 	<script type="text/javascript" src="knockout-2.2.1.js"></script>
 	<script type="text/javascript" src="underscore.js"></script>
 
-	<script type="text/html" id="ChatMessageTemplate">
+	<script type="text/html" id="MessageTemplate">
 		<div class="message">
 			<span data-bind="text: timestamp"></span>
 			<span data-bind="text: name" style="font-weight: bold;"></span>
@@ -185,7 +123,7 @@
 		</div>
 	</script>
 
-	<script type="text/html" id="ChatEmoteTemplate">
+	<script type="text/html" id="ActionTemplate">
 		<div class="message">
 			<span data-bind="text: timestamp"></span>
 			<span data-bind="text: name" style="font-weight: bold;"></span>
@@ -193,7 +131,7 @@
 		</div>
 	</script>
 
-	<script type="text/html" id="ChatCommandLineTemplate">
+	<script type="text/html" id="InfoTemplate">
 		<div class="message">
 			<span data-bind="text: timestamp"></span>
 			<span data-bind="text: text" style="font-family: Courier New, monospace;"></span>
@@ -242,83 +180,78 @@
 		}
 
 		/* 
-			==== Contructors ==== 
-			- Message: "13:37 <b>MrAwesome</b> Hi guys"
-				- todo Emote Icons? :) :( :| :P xD
-			- Emote: "13:37 <b>MrAwesome dances!</b>"
-				not yet implemented
-			- Chat Info: "13:37 Server restart in 5 minutes!", "13:37 Font size changed to 15px.", etc.
-				not yet implemented
+			==== Contructors ====
 		*/
 
-		var ChatMessage = function(name, text){
+		var Message = function(template, name, text){
+			this.template = template;
 			this.timestamp = getTime();
 			this.name = name;
-			this.text = text;
-		}
-
-		var ChatEmote = function(name, text){
-			this.timestamp = getTime();
-			this.name = name;
-			this.text = text;
-		}
-
-		var ChatInfo = function(text){
-			this.timestamp = getTime();
-			this.name = "";
 			this.text = text;
 		}
 
 		var model = function(){
-			this.chatLog = ko.observableArray([]);
-			this.chatInput = ko.observable("");
-			this.chatSubmit = function(){
-				var msg = this.chatInput().trim();
-				if(msg == ""){
+			var self = this;
 
+			self.chatlog = ko.observableArray([]);
+			self.textinput = ko.observable("");
+
+			self.submit = function(){
+				var text = self.textinput().trim();
+				if(text == ""){
+					// do nothing
 				}
-				else if(msg[0] == "/"){
-
+				else if(text[0] == "/"){
+					self.parseCommand(text);
 				}
 				else {
-					this.chatLog.push(new ChatMessage("Testguy", msg));
+					self.logMessage("MessageTemplate", "Testguy", text);
 				}
 
-				if(this.chatLog().length > 50){
-					this.chatLog.shift();
-				}
-
-				this.chatScrollBottom();
-				this.chatInput("");
+				self.textinput("");
 			};
 
-			this.chatShow = ko.observable(true);
+			self.logMessage = function(type, name, text){
+				self.chatlog.push(new Message(type, name, text));
 
-			this.chatHide = ko.computed(function(){
-				return !this.chatShow();
-			}, this);
+				if(self.chatlog().length > 50){
+					self.chatlog.shift();
+				}
 
-			this.chatToggle = function(){
-				this.chatShow(!this.chatShow());
+				self.scrollBottom();
+			};
+
+			self.logTemplate = function(msg){
+				return msg.template;
+			}
+
+			self.show = ko.observable(true);
+
+			self.hide = ko.computed(function(){
+				return !self.show();
+			}, self);
+
+			self.toggle = function(){
+				self.show(!self.show());
 			};
 
 			/* 
 			==== Scrolling ==== 
 			*/
 
-			this.chatScrollUp = function(){
+			self.scrollUp = function(){
 				scrollUp("chatLog1", 75);
 			};
 
-			this.chatScrollDown = function(){
+			self.scrollDown = function(){
 				scrollDown("chatLog1", 75);
 			};
 
-			this.chatScrollTop = function(){
+			self.scrollTop = function(){
 				scrollTop("chatLog1");
 			};
 
-			this.chatScrollBottom = function(){
+			self.scrollBottom = function(){
 				scrollBottom("chatLog1");
 			};
 
@@ -326,39 +259,64 @@
 			==== Commands ==== 
 			*/
 
-			this.Command = {};
-			this.Command.execute = function(text){
-				var args = [];
-				var result = {};
-				args = text.split(" ");
+			self.parseCommand = function(text){
+				var args = text.split(" ");
+				var command = args.shift().substr(1);
+				//console.log("Command: %o, Args: %o", command, args);
+				switch(command){
+					case "help": case "?":
+  						self.commands.help(args);
+  						break;
+					case "about": case "info": case "version":
+  						self.commands.about(args);
+  						break;
+  					case "conf":
+  						self.commands.set(args);
+  						break;
+					default:
+  						self.logMessage("InfoTemplate", "CL", "Unknown command: \"" + command + "\"");
+				}
 			};
-			this.Command.set = function(){
 
+			self.commands = {};
+			self.commands.conf = function(args){
+				self.logMessage("InfoTemplate", "CL", "Nothing to do here...");
 			};
-			this.Command.help = function(){
-
+			self.commands.help = function(args){
+				self.logMessage("InfoTemplate", "CL", "=== 0ff-white Chat Help ===");
+				self.logMessage("InfoTemplate", "CL", "/help - lists all commands");
+				self.logMessage("InfoTemplate", "CL", "/about - shows credits");
+				self.logMessage("InfoTemplate", "CL", "/conf - sets or shows settings");
+			};
+			self.commands.about = function(args){
+				self.logMessage("InfoTemplate", "CL", "0ff-white Chat");
+				self.logMessage("InfoTemplate", "CL", "Beta Version");
+				self.logMessage("InfoTemplate", "CL", "Developed by MalevolentSpice, Malattia");
 			};
 
 			/* 
 			==== Settings ==== 
 			*/
 
-			this.Settings = {};
-
-			this.Settings.Font = {};
-			this.Settings.Font.Color = ko.observable();
-			this.Settings.Font.Size = ko.observable();
-			this.Settings.Font.Family = ko.observable();
-
-			this.Settings.Background = {};
-			this.Settings.Background.Color = ko.observable();
-
-			this.Settings.ShowEmoteIcons = ko.observable();
-
-			this.Settings.Log = {};
-			this.Settings.Log.Height = ko.observable();
-			this.Settings.Log.HistoryLength = ko.observable();
-			this.Settings.Log.ScrollValue = ko.observable();
+			self.settings = {
+				general: {
+					showEmoteIcons: ko.observable(),
+					useNativeScrolling: ko.observable()
+				},
+				font: {
+					color: ko.observable(),
+					size: ko.observable(),
+					family: ko.observable()
+				},
+				background: {
+					color: ko.observable()
+				},
+				chatlog: {
+					height: ko.observable(),
+					length: ko.observable(),
+					scrollValue: ko.observable(),
+				}
+			};	
 		}
 		ko.applyBindings(new model());
 	</script>

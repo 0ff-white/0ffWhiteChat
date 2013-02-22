@@ -1,0 +1,161 @@
+/*
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+Version 2, December 2004
+
+Copyright (C) 2013 0ff-white Developers <https://github.com/0ff-white>
+
+Everyone is permitted to copy and distribute verbatim or modified
+copies of this license document, and changing it is allowed as long
+as the name is changed.
+
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE TERMS AND
+CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+0. You just DO WHAT THE FUCK YOU WANT TO.
+*/
+
+input, button{
+	max-height: 18px;
+	margin: 0px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(80,80,80,1);
+	border-radius: 4px;
+	background-color: rgba(53,52,47,1);
+	color: rgba(255,255,255,1);
+}
+
+input[type=text]{
+	padding-left: 3px;
+	padding-right: 3px;
+	box-shadow: inset 0px 0px 4px 0px rgba(0,0,0,0.7);
+}
+
+input[type=text]:focus{
+	outline: none;
+	border-color: rgba(255,165,0,1);
+}
+
+select{
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(80,80,80,1);
+	border-radius: 4px;
+	background-color: rgba(53,52,47,1);
+	color: rgba(255,255,255,1);
+}
+
+select:focus{
+	outline: none;
+	border-color: rgba(255,165,0,1);
+}
+
+option{
+	padding-left: 3px;
+	padding-right: 5px;
+}
+
+button{
+	box-shadow: -1px 1px 1px 0px rgba(0,0,0,0.7);
+	cursor: pointer;
+}
+
+button:active{
+	box-shadow: inset -1px 1px 1px 0px rgba(0,0,0,1);
+}
+
+p{
+	margin: 3px;
+}
+
+.window{
+	position: absolute;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(80,80,80,1);
+	border-radius: 4px;
+	background-color: rgba(53,52,47,1);
+	font-family: Verdana, sans-serif;
+	font-size: 12px;
+	line-height: 1;
+	color: rgba(255,255,255,1);
+	overflow: hidden;
+	box-shadow: -1px 1px 4px 1px rgba(0,0,0,0.7);
+}
+
+.left{
+	float: left;
+	margin-left: 5px;
+}
+
+.right{
+	float: right;
+	margin-right: 5px;
+}
+
+.row{
+	width: 100%;
+	display: inline-block;
+}
+
+.column{
+	height: 100%;
+	display: inline-block;
+}
+
+.top {
+	margin-top: 5px;
+}
+
+.bot {
+	margin-bottom: 5px;
+}
+
+.inset{
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(80,80,80,1);
+	border-radius: 4px;
+	box-shadow: inset 0px 0px 4px 0px rgba(0,0,0,0.7);
+}
+
+.outset{
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(80,80,80,1);
+	border-radius: 4px;
+	box-shadow: -1px 1px 1px 0px rgba(0,0,0,0.7);
+}
+
+.btn{
+	box-shadow: -1px 1px 1px 0px rgba(0,0,0,0.7);
+	cursor: pointer;
+}
+
+.btn:active{
+	box-shadow: inset -1px 1px 1px 0px rgba(0,0,0,0.7);
+}
+
+.icon-s{
+	height: 8px;
+	width: 8px;
+}
+
+.icon{
+	height: 16px;
+	width: 16px;
+}
+
+.icon-l{
+	height: 32px;
+	width: 32px;
+}
+
+.iconbutton{
+	padding: 0px;
+}
+
+.iconbutton img{
+	height: 16px;
+	width: 16px;
+}

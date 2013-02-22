@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 8 8">
+	<polyline points="1 4 7 4" stroke="white" stroke-width="1" transform="rotate(45,4,4)"/>
+	<polyline points="4 1 4 7" stroke="white" stroke-width="1" transform="rotate(45,4,4)"/>
+</svg>
